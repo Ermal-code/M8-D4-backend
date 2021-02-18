@@ -3,6 +3,7 @@ const express = require("express");
 const AuthorModel = require("./schema");
 const { authenticate, refreshToken } = require("../../utils/auth");
 const { authorize, adminOnly } = require("../../utils/auth/middlewares");
+const passport = require("passport");
 
 const router = express.Router();
 
@@ -65,8 +66,20 @@ router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const author = await AuthorModel.findByCredentials(email, password);
-    const tokens = await authenticate(author);
-    res.status(200).send(tokens);
+
+    const { token, refreshToken } = await authenticate(author);
+
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      path: "/",
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      path: "/authors/refreshToken",
+    });
+
+    res.send("OK");
   } catch (error) {
     console.log(error);
     next(error);
@@ -102,4 +115,31 @@ router.post("/refreshToken", async (req, res, next) => {
     }
   }
 });
+
+router.get(
+  "/googleLogin",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get(
+  "/googleRedirect",
+  passport.authenticate("google"),
+  async (req, res, next) => {
+    try {
+      res.cookie("accessToken", req.user.tokens.token, {
+        httpOnly: true,
+      });
+
+      res.cookie("refreshToken", req.user.tokens.refreshToken, {
+        httpOnly: true,
+        path: "/authors/refreshToken",
+      });
+
+      res.status(200).redirect(`${process.env.FE_URL}`);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+);
 module.exports = router;

@@ -7,6 +7,7 @@ const authenticate = async (author) => {
     const newRefreshToken = await generateRefreshJWT({ _id: author._id });
 
     author.refreshTokens = [...author.refreshTokens, newRefreshToken];
+
     await author.save();
 
     return { token: newAccessToken, refreshToken: newRefreshToken };
@@ -80,12 +81,12 @@ const refreshToken = async (oldRefreshToken) => {
     author.refreshTokens.indexOf(currentRefreshToken)
   ] = newRefreshToken;
 
-  console.log("current", currentRefreshToken);
-  console.log(
-    "token--->",
+  // console.log("current", currentRefreshToken);
+  // console.log(
+  //   "token--->",
 
-    author.refreshTokens.indexOf(newRefreshToken)
-  );
+  //   author.refreshTokens.indexOf(newRefreshToken)
+  // );
 
   await author.updateOne({ refreshTokens: author.refreshTokens });
 

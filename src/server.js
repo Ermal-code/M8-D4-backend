@@ -3,9 +3,12 @@ const listEndpoints = require("express-list-endpoints");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
+const passport = require("passport");
+const cookieParser = require("cookie-parser");
 
 const articlesRoute = require("./services/articles");
 const authorsRoute = require("./services/authors");
+const oauth = require("./utils/auth/oauth");
 
 const {
   notFoundErrorHandler,
@@ -22,6 +25,8 @@ const port = process.env.PORT || 3003;
 server.use(cors());
 server.use(helmet());
 server.use(express.json());
+server.use(cookieParser());
+server.use(passport.initialize());
 
 server.use("/articles", articlesRoute);
 server.use("/authors", authorsRoute);

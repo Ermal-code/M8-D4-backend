@@ -6,7 +6,7 @@ const AuthorSchema = new Schema(
     name: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true, dropDups: true },
-    password: { type: String, required: true },
+    password: { type: String },
     img: {
       type: String,
       required: true,
@@ -19,7 +19,8 @@ const AuthorSchema = new Schema(
       required: true,
       default: "user",
     },
-    refreshTokens: [{ token: { type: String } }],
+    refreshTokens: [{ type: String }],
+    googleId: String,
   },
   { timestamps: true }
 );
