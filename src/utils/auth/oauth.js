@@ -17,6 +17,7 @@ passport.use(
         name: profile.name.givenName,
         lastName: profile.name.familyName,
         email: profile.emails[0].value,
+        img: profile.photos[0].value,
         role: "user",
         refreshTokens: [],
       };

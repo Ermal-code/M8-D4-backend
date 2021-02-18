@@ -135,7 +135,7 @@ router.get(
         path: "/authors/refreshToken",
       });
 
-      res.status(200).redirect(`${process.env.FE_URL}`);
+      res.status(200).redirect(`${process.env.FE_URL}/home`);
     } catch (error) {
       console.log(error);
       next(error);
