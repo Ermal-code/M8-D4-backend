@@ -51,7 +51,7 @@ router.put("/me", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/me", async (req, res, next) => {
   try {
     await req.author.deleteOne();
 
